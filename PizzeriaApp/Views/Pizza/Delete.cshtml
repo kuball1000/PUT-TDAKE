@@ -1,0 +1,51 @@
+@model Pizza
+@{
+    ViewData["Title"] = "Usun pizze";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Menu</a></li>
+        <li class="breadcrumb-item active">Potwierdzenie usuniecia</li>
+    </ol>
+</nav>
+
+<div class="card border-danger shadow-sm" style="max-width:600px">
+    <div class="card-header bg-danger text-white">
+        <h2 class="mb-0">Potwierdzenie usuniecia</h2>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <strong>Uwaga!</strong> Ta operacja jest nieodwracalna. Czy na pewno chcesz usunac ponizszą pizze z menu?
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-4">Nazwa</dt>
+            <dd class="col-sm-8"><strong>@Model.Name</strong></dd>
+
+            <dt class="col-sm-4">Rodzaj ciasta</dt>
+            <dd class="col-sm-8">@(Model.CrustType == CrustType.Thin ? "Cienkie" : "Grube")</dd>
+
+            <dt class="col-sm-4">Cena (M/S/D)</dt>
+            <dd class="col-sm-8">
+                @Model.PriceSmall.ToString("F2") zl /
+                @Model.PriceMedium.ToString("F2") zl /
+                @Model.PriceLarge.ToString("F2") zl
+            </dd>
+
+            @if (Model.PizzaIngredients.Any())
+            {
+                <dt class="col-sm-4">Skladniki</dt>
+                <dd class="col-sm-8">@string.Join(", ", Model.PizzaIngredients.Select(pi => pi.Ingredient.Name))</dd>
+            }
+        </dl>
+
+        <form asp-action="Delete" method="post" class="mt-3">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger px-4">Tak, usun pizze</button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">Nie, wróc do menu</a>
+            </div>
+        </form>
+    </div>
+</div>

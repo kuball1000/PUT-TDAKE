@@ -1,0 +1,53 @@
+@model Pizza
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Menu</a></li>
+        <li class="breadcrumb-item active">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="card shadow-sm" style="max-width:600px">
+    <div class="card-header bg-danger text-white">
+        <h2 class="mb-0">@Model.Name</h2>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Rodzaj ciasta</dt>
+            <dd class="col-sm-8">@(Model.CrustType == CrustType.Thin ? "Cienkie" : "Grube")</dd>
+
+            <dt class="col-sm-4">Cena mala</dt>
+            <dd class="col-sm-8">@Model.PriceSmall.ToString("F2") zl</dd>
+
+            <dt class="col-sm-4">Cena srednia</dt>
+            <dd class="col-sm-8">@Model.PriceMedium.ToString("F2") zl</dd>
+
+            <dt class="col-sm-4">Cena duza</dt>
+            <dd class="col-sm-8">@Model.PriceLarge.ToString("F2") zl</dd>
+
+            <dt class="col-sm-4">Skladniki</dt>
+            <dd class="col-sm-8">
+                @if (!Model.PizzaIngredients.Any())
+                {
+                    <span class="text-muted fst-italic">Brak dodatkowych skladnikow</span>
+                }
+                else
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var pi in Model.PizzaIngredients)
+                        {
+                            <span class="badge bg-secondary fs-6">@pi.Ingredient.Name</span>
+                        }
+                    </div>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer d-flex gap-2">
+        <a asp-action="Index" class="btn btn-outline-secondary">Powrot do menu</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Usun te pizze</a>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+@model IEnumerable<Ingredient>
+@{
+    ViewData["Title"] = "Skladniki";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Zarzadzanie skladnikami</h1>
+    <a asp-action="Create" class="btn btn-danger">+ Dodaj skladnik</a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Brak skladnikow. <a asp-action="Create">Dodaj pierwszy skladnik!</a>
+    </div>
+}
+else
+{
+    <table class="table table-hover table-striped align-middle shadow-sm">
+        <thead class="table-danger">
+            <tr>
+                <th>Nazwa skladnika</th>
+                <th>Uzywany w pizzach</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ingredient in Model)
+            {
+                bool inUse = ingredient.PizzaIngredients.Any();
+                <tr>
+                    <td>@ingredient.Name</td>
+                    <td>
+                        @if (inUse)
+                        {
+                            <span class="badge bg-secondary">@ingredient.PizzaIngredients.Count</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">nieuzywany</span>
+                        }
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a asp-action="Edit" asp-route-id="@ingredient.Id" class="btn btn-sm btn-outline-primary">Edytuj</a>
+                        @if (inUse)
+                        {
+                            <button class="btn btn-sm btn-outline-danger"
+                                    disabled
+                                    title="Skladnik jest uzywany - nie mozna usunac">Usun</button>
+                        }
+                        else
+                        {
+                            <form asp-action="Delete" asp-route-id="@ingredient.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Czy na pewno usunac skladnik \'@ingredient.Name\'?')">Usun</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

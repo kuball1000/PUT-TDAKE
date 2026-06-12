@@ -1,0 +1,33 @@
+@model Ingredient
+@{
+    ViewData["Title"] = "Dodaj skladnik";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Skladniki</a></li>
+        <li class="breadcrumb-item active">Nowy skladnik</li>
+    </ol>
+</nav>
+
+<h2 class="mb-4">Dodaj nowy skladnik</h2>
+
+<div class="card shadow-sm" style="max-width:450px">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-bold"></label>
+                <input asp-for="Name" class="form-control" autofocus placeholder="np. Pepperoni" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">Dodaj skladnik</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Anuluj</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
